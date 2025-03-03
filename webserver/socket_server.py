@@ -16,11 +16,15 @@ class SocketServer:
 
         #infinite loop accepting connections
         while True:
+            #recieve HTTP request from client
             client_conn, client_addr = self.socket.accept()
             request = self._recv_http(client_conn)
             headers, payload = self._parse_http(request)
 
-            response = 'HTTP/1.0 200 OK\n\n<h1>Hello World</h1>'
+            #backend logic for treating the request
+            response = self._handle_request(headers, payload)
+
+            #send response to client
             client_conn.sendall(response.encode())
             client_conn.close()
         
@@ -51,7 +55,29 @@ class SocketServer:
             return headers, payload
         except:
             raise Exception('invalid HTTP request: \n', data)
+        
+    def _handle_request(self, headers, payload):
+        try:
+            if headers['http_method'] == 'GET':
+                response = self._serve_html(headers['path'])
+            elif headers['http_method'] == 'POST':
+                response = 'HTTP/1.0 200 OK\n\n<h1>YOU MADE A POST REQ</h1>'
+            else:
+                response = 'HTTP/1.1 405 Method Not Allowed\r\nContent-Length: 0\r\nAllow: GET, POST, HEAD'
+        except:
+            response = 'HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: 71\r\n\r\n{"error": "Bad request", "message": "Request body could not be read properly."}'
 
+        return response
+    
+    def _serve_html(self, filepath):
+        if filepath == '/':
+            filepath = '/index.html'
+        try:
+            html = 'HTTP/1.0 200 OK\n\n' + open('webserver/webassets' + filepath, 'r').read()
+        except:
+            html = 'HTTP/1.0 404 NOT FOUND\n\nFile Not Found'
+        
+        return html
 
 
 
