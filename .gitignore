@@ -1,2 +1,5 @@
-venv/
-webserver/__pycache__/
+.prettierrc
+.vscode/
+.venv/
+__pycache__/
+node_modules/
