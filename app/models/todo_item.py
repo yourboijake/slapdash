@@ -1,10 +1,7 @@
 from dataclasses import dataclass
-from enum import Enum
-from typing import Annotated
 from pydantic import BaseModel
 
-@dataclass 
-class TodoItem:
+class TodoItem(BaseModel):
   id: int
   title: str
   description: str
@@ -16,4 +13,4 @@ class TodoForm(BaseModel):
 
 class TodoSearchResult(BaseModel):
   idx: int
-  todo_item: TodoItem | None = None
+  todo_item: TodoItem | None
