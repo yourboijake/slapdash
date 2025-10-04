@@ -1,0 +1,24 @@
+{% macro Chat() %}
+  <div>
+    <div>{{ ChatHistory() }}</div>
+    <div>{{ ChatBox() }}</div>
+  </div>
+{% endmacro %}
+
+{% macro ChatHistory() %}
+  <ul id="chat-history">
+    <li>Hello, buddy!</li>
+    <li>What's up, pal?</li>
+    <li>Not much, dawg</li>
+  </ul>
+{% endmacro %}
+
+{% macro ChatBox() %}
+  <div id="chat-box">
+    <form hx-post="/send-chat" hx-target="#chat-history" hx-swap="beforeend">
+      <input type="hidden" name="sender_id" value="1" />
+      <textarea name="message" rows="8" cols="20"></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+{% endmacro %}
