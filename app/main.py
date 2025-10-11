@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from app.controllers import todo_routes, chat_routes
 from contextlib import asynccontextmanager
-from app.models.chat import create_db_and_tables
-from sqlmodel import create_engine
+from app.database import create_db_and_tables
 from app.database import engine
 
 @asynccontextmanager
