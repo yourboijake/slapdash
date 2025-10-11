@@ -1,14 +1,17 @@
-from fastapi import Request, HTTPException, Form, APIRouter
+from fastapi import Request, HTTPException, Form, APIRouter, Depends
 from fastapi.responses import HTMLResponse
 from app.models.chat import ChatMessage
+from app.database import get_session
 from typing import Annotated
 from fastapi.templating import Jinja2Templates
 from jinja2 import Environment, FileSystemLoader
+from sqlmodel import Session
 
 templates = Jinja2Templates(directory="templates")
 template_env = Environment(loader=FileSystemLoader("templates"))
 
 router = APIRouter()
+SessionDep = Annotated[Session, Depends(get_session)]
 
 @router.get('/', response_class=HTMLResponse)
 async def home(request: Request) -> HTMLResponse:
