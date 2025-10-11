@@ -1,6 +1,10 @@
 from sqlmodel import create_engine, Session
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from sqlmodel import SQLModel
+
+def create_db_and_tables(engine):
+  SQLModel.metadata.create_all(engine)
 
 # Database configuration
 sqlite_file_name = "database.db"
