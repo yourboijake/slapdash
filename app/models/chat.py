@@ -39,7 +39,5 @@ class ChatMembership(SQLModel, table=True):
   chat_id: uuid.UUID = Field(foreign_key="chatsession.id")
   user_id: uuid.UUID = Field(foreign_key="user.id")
 
-
-
 def create_db_and_tables(engine):
   SQLModel.metadata.create_all(engine)
