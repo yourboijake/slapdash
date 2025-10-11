@@ -1,10 +1,12 @@
 {% macro Chat(chat_history) %}
   <div class="flex items-center justify-center h-screen">
     <div class="grid grid-cols-1 grid-rows-2 gap-4">
-      <div class="card-md bg-base-100 w-250">
-        {{ ChatHistory(chat_history) }}
+      <div class="card-md card-dash bg-base-200 w-250">
+        <div class="overflow-y-auto max-h-60" id="chat-history-scroll-div">
+          {{ ChatHistory(chat_history) }}
+        </div>
       </div>
-      <div class="card-md bg-base-100 w-250">{{ ChatBox() }}</div>
+      <div class="card-md w-250">{{ ChatBox() }}</div>
     </div>
   </div>
 {% endmacro %}
@@ -18,7 +20,12 @@
 {% endmacro %}
 
 {% macro ChatHistoryRow(chat) %}
-  <div class="list-row">{{ chat.message }}</div>
+  <div class="list-row">
+    <div class="text-xs uppercase font-semibold opacity-60">
+      {{ chat.sent_at }}
+    </div>
+    <div>{{ chat.message }}</div>
+  </div>
 {% endmacro %}
 
 {% macro ChatBox() %}
