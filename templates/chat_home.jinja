@@ -10,15 +10,22 @@
       type="text/css"
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx-ext-ws@2.0.2"></script>
   </head>
-  <body>
+  <body data-theme="light">
     {% from 'chat.jinja' import Chat %}
     {{ Chat(chat_history) }}
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"
-      integrity="sha384-ZBXiYtYQ6hJ2Y0ZNoYuI+Nq5MqWBr+chMrS/RkXpNzQCApHEhOt2aY8EJgqwHLkJ"
-      crossorigin="anonymous"
-    ></script>
+    <script>
+      function scrollToBottom(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollTop = element.scrollHeight;
+        }
+      }
+      window.addEventListener("load", () =>
+        scrollToBottom("chat-history-scroll-div"),
+      );
+    </script>
   </body>
 </html>
