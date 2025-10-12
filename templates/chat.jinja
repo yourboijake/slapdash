@@ -1,12 +1,14 @@
 {% macro Chat(chat_history) %}
-  <div class="flex items-center justify-center h-screen">
-    <div class="grid grid-cols-1 grid-rows-2 gap-4">
-      <div class="card-md card-dash bg-base-200 w-250">
-        <div class="overflow-y-auto max-h-60" id="chat-history-scroll-div">
-          {{ ChatHistory(chat_history) }}
+  <div hx-ext="ws" ws-connect="/chat">
+    <div class="flex items-center justify-center h-screen">
+      <div class="grid grid-cols-1 grid-rows-2 gap-4">
+        <div class="card-md card-dash bg-base-200 w-250">
+          <div class="overflow-y-auto max-h-60" id="chat-history-scroll-div">
+            {{ ChatHistory(chat_history) }}
+          </div>
         </div>
+        <div class="card-md w-250">{{ ChatBox() }}</div>
       </div>
-      <div class="card-md w-250">{{ ChatBox() }}</div>
     </div>
   </div>
 {% endmacro %}
@@ -28,7 +30,37 @@
   </div>
 {% endmacro %}
 
+{% macro ChatHistoryRowOOBSwap(chat) %}
+  <div class="list-row" hx-swap-oob="beforeend" id="chat-history">
+    <div class="text-xs uppercase font-semibold opacity-60">
+      {{ chat.sent_at }}
+    </div>
+    <div>{{ chat.message }}</div>
+  </div>
+{% endmacro %}
+
 {% macro ChatBox() %}
+  <div id="chat-box" class="w-full">
+    <form id="form" ws-send hx-trigger="submit from:body">
+      <input
+        type="hidden"
+        name="sender_id"
+        value="ad9cbee16a7c4d93bacbce606e726ebb"
+      />
+      <textarea
+        name="message"
+        rows="8"
+        cols="20"
+        class="w-full"
+        style="resize: none"
+      ></textarea>
+      <br />
+      <input type="submit" value="Send" class="btn btn-soft" />
+    </form>
+  </div>
+{% endmacro %}
+
+{% macro ChatBoxHTTP() %}
   <div id="chat-box" class="w-full">
     <form hx-post="/send-chat" hx-target="#chat-history" hx-swap="beforeend">
       <input
@@ -38,7 +70,7 @@
       />
       <textarea name="message" rows="8" cols="20" class="w-full"></textarea>
       <br />
-      <button type="submit" class="btn" style="resize: none">Send</button>
+      <button type="submit" class="btn btn-soft">Send</button>
     </form>
   </div>
 {% endmacro %}
