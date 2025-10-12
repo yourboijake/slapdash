@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.controllers import todo_routes, chat_routes
+from app.controllers import chat_routes
 from contextlib import asynccontextmanager
 from app.database import create_db_and_tables
 from app.database import engine
