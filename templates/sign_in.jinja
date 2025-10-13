@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slapdash</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx-ext-ws@2.0.2"></script>
+  </head>
+  <body data-theme="dark" class="bg-base">
+    <div class="hero min-h-screen bg-base-200">
+      <div class="hero-content flex-col ">
+        <div class="text-center lg:text-left">
+          <h1 class="text-3xl font-bold">Sign In</h1>
+        </div>
+        <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+          <div class="card-body">
+            <form id="sign-in-form" action="/sign-in" method="post">
+              <div class="form-control">
+                <label class="label mb-1 text-lg">
+                  <span class="label-text">Email</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder=""
+                  name="email"
+                  class="input input-bordered focus:outline-none focus:ring-0"
+                />
+              </div>
+              <div class="form-control">
+                <label class="label mb-1 mt-3 text-lg">
+                  <span class="label-text">Password</span>
+                </label>
+                <input
+                  type="password"
+                  placeholder=""
+                  name="password"
+                  class="input input-bordered focus:outline-none focus:ring-0"
+                />
+              </div>
+              <div class="form-control mt-6">
+                <button class="btn btn-primary">Login</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
