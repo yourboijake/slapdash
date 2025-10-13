@@ -13,9 +13,9 @@
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/htmx-ext-ws@2.0.2"></script>
   </head>
-  <body data-theme="light">
-    {% from 'chat.jinja' import Chat %}
-    {{ Chat(chat_history) }}
+  <body data-theme="dark">
+    {% from 'chat.jinja' import ChatLayout %}
+    {{ ChatLayout(chat_metadata, chat_history) }}
     <script>
       function scrollToBottom(elementId) {
         const element = document.getElementById(elementId);

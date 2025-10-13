@@ -38,22 +38,9 @@ manager = ConnectionManager()
 @router.get('/', response_class=HTMLResponse)
 async def home(request: Request, session: SessionDep) -> HTMLResponse:
   chat_history = [msg for msg in get_message_history(session)]
-  page = templates.TemplateResponse("chat_home.jinja", {'request': request, 'chat_history': chat_history})
+  chat_metadata = {'chat_name': 'test chat'}
+  page = templates.TemplateResponse("chat_home.jinja", {'request': request, 'chat_metadata': chat_metadata, 'chat_history': chat_history})
   return page
-
-@router.post('/send-chat', response_class=HTMLResponse)
-async def send_chat(request: Request, chat_message_form: Annotated[ChatMessageForm, Form()], session: SessionDep) -> HTMLResponse:
-  new_chat = ChatMessage(
-    sender_id=uuid.UUID(chat_message_form.sender_id), 
-    message=chat_message_form.message,
-    sent_at=datetime.datetime.now(),
-  )
-  session.add(new_chat)
-  session.commit()
-  session.refresh(new_chat)
-  ChatHistoryRow = template_env.get_template("chat.jinja").module.ChatHistoryRow # type: ignore
-  new_chat_html = ChatHistoryRow(new_chat)
-  return HTMLResponse(content=new_chat_html)
 
 def parse_websocket_json(data: dict) -> ChatMessage | None:
   try:

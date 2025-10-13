@@ -1,41 +1,48 @@
-{% macro Chat(chat_history) %}
+{% macro ChatLayout(chat_metadata, chat_history) %}
   <div hx-ext="ws" ws-connect="/chat">
-    <div class="flex items-center justify-center h-screen">
-      <div class="grid grid-cols-1 grid-rows-2 gap-4">
-        <div class="card-md card-dash bg-base-200 w-250">
-          <div class="overflow-y-auto max-h-60" id="chat-history-scroll-div">
-            {{ ChatHistory(chat_history) }}
-          </div>
-        </div>
-        <div class="card-md w-250">{{ ChatBox() }}</div>
+    <div class="flex flex-col items-center justify-center h-screen">
+      <div class="h-10 w-2/3 flex text-white">
+        {{ ChatHeader(chat_metadata) }}
+      </div>
+      <div
+        class="flex-1 overflow-y-auto min-h-0 w-2/3 bg-base-200 flex items-center justify-center text-white"
+      >
+        {{ ChatHistory(chat_history) }}
+      </div>
+      <div class="h-30 w-2/3 flex items-center justify-center text-white">
+        {{ ChatBox() }}
       </div>
     </div>
   </div>
 {% endmacro %}
 
+{% macro ChatHeader(chat_metadata) %}
+  <div class="text-xl">{{ chat_metadata.chat_name }}</div>
+{% endmacro %}
+
 {% macro ChatHistory(chat_history) %}
-  <div class="list" id="chat-history">
+  <ul class="list w-full" id="chat-history">
     {% for chat in chat_history %}
       {{ ChatHistoryRow(chat) }}
     {% endfor %}
-  </div>
+  </ul>
 {% endmacro %}
 
 {% macro ChatHistoryRow(chat) %}
-  <div class="list-row">
-    <div class="text-xs uppercase font-semibold opacity-60">
-      {{ chat.sent_at }}
+  <li class="list-row hover:bg-info-content">
+    <div class="size-10 rounded-box bg-primary"></div>
+    <div>
+      <div class="text-sm uppercase font-semibold opacity-60">
+        {{ chat.sent_at.strftime('%Y-%m-%d %H:%M') }}
+      </div>
+      <div class="list-col-wrap">{{ chat.message }}</div>
     </div>
-    <div>{{ chat.message }}</div>
-  </div>
+  </li>
 {% endmacro %}
 
 {% macro ChatHistoryRowOOBSwap(chat) %}
-  <div class="list-row" hx-swap-oob="beforeend" id="chat-history">
-    <div class="text-xs uppercase font-semibold opacity-60">
-      {{ chat.sent_at }}
-    </div>
-    <div>{{ chat.message }}</div>
+  <div hx-swap-oob="beforeend" id="chat-history">
+    {{ ChatHistoryRow(chat) }}
   </div>
 {% endmacro %}
 
@@ -47,30 +54,20 @@
         name="sender_id"
         value="ad9cbee16a7c4d93bacbce606e726ebb"
       />
-      <textarea
-        name="message"
-        rows="8"
-        cols="20"
-        class="w-full"
-        style="resize: none"
-      ></textarea>
-      <br />
-      <input type="submit" value="Send" class="btn btn-soft" />
-    </form>
-  </div>
-{% endmacro %}
-
-{% macro ChatBoxHTTP() %}
-  <div id="chat-box" class="w-full">
-    <form hx-post="/send-chat" hx-target="#chat-history" hx-swap="beforeend">
-      <input
-        type="hidden"
-        name="sender_id"
-        value="ad9cbee16a7c4d93bacbce606e726ebb"
-      />
-      <textarea name="message" rows="8" cols="20" class="w-full"></textarea>
-      <br />
-      <button type="submit" class="btn btn-soft">Send</button>
+      <div class="relative w-full">
+        <textarea
+          name="message"
+          rows="4"
+          cols="20"
+          class="textarea w-full focus:outline-none focus:ring-0 border-2 rounded-md"
+          style="resize: none;"
+        ></textarea>
+        <input
+          type="submit"
+          value="Send"
+          class="btn btn-soft absolute bottom-3 right-2 px-4 py-2"
+        />
+      </div>
     </form>
   </div>
 {% endmacro %}
