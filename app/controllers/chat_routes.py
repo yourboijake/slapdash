@@ -1,13 +1,12 @@
 from fastapi import Request, HTTPException, Form, APIRouter, Depends, WebSocket
 from fastapi.responses import HTMLResponse
-from app.models.chat import ChatMessageForm, ChatMessage, get_message_history
+from app.models.sql_models import Chat_Message_Form, Chat_Message, get_message_history
 from app.database import get_session
 from typing import Annotated
 from fastapi.templating import Jinja2Templates
 from jinja2 import Environment, FileSystemLoader
 from sqlmodel import Session
 import datetime
-import uuid
 
 templates = Jinja2Templates(directory="templates")
 template_env = Environment(loader=FileSystemLoader("templates"))
@@ -42,16 +41,16 @@ async def home(request: Request, session: SessionDep) -> HTMLResponse:
   page = templates.TemplateResponse("chat_home.jinja", {'request': request, 'chat_metadata': chat_metadata, 'chat_history': chat_history})
   return page
 
-def parse_websocket_json(data: dict) -> ChatMessage | None:
+def parse_websocket_json(data: dict) -> Chat_Message | None:
   try:
-    new_chat = ChatMessage(
-      sender_id=uuid.UUID(data['sender_id']),
+    new_chat = Chat_Message(
+      sender_id=int(data['sender_id']),
       message=data['message'],
       sent_at=datetime.datetime.now(),
     )
     return new_chat
   except:
-    print('failed to create ChatMessage object from websocket data: ', data);
+    print('failed to create ChatMessage object from websocket data: ', data)
     return None
 
 @router.websocket('/chat')
@@ -64,7 +63,6 @@ async def ws_endpoint(websocket: WebSocket, session: SessionDep):
       if new_chat != None:
         session.add(new_chat)
         session.commit()
-        session.refresh(new_chat)
         ChatHistoryRowOOBSwap = template_env.get_template("chat.jinja").module.ChatHistoryRowOOBSwap # type: ignore
         new_chat_html = ChatHistoryRowOOBSwap(new_chat)
         await manager.broadcast(new_chat_html)

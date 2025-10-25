@@ -1,0 +1,28 @@
+{% macro AuthPage(form_type) %}
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Slapdash</title>
+      <link
+        href="https://cdn.jsdelivr.net/npm/daisyui@5"
+        rel="stylesheet"
+        type="text/css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/htmx-ext-ws@2.0.2"></script>
+    </head>
+    <body data-theme="light" class="bg-base">
+      {% from 'sign_in.jinja' import SignIn %}
+      {% from 'sign_up.jinja' import SignUp %}
+
+      {% if form_type == 'sign-in' %}
+        {{ SignIn() }}
+      {% elif form_type == 'sign-up' %}
+        {{ SignUp() }}
+      {% endif %}
+    </body>
+  </html>
+{% endmacro %}

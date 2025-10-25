@@ -1,16 +1,13 @@
 from fastapi import FastAPI
 from app.controllers import chat_routes, auth_routes
 from contextlib import asynccontextmanager
-from app.database import create_db_and_tables
-from app.database import engine
-
+from app.database import create_db_and_tables, engine
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_db_and_tables(engine)
-    print("db and tables created")
-    yield
-
+  create_db_and_tables(engine)
+  print("db and tables created")
+  yield
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(chat_routes.router)
