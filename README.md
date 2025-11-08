@@ -1,3 +1,11 @@
-## Slapdash 
+To install dependencies:
+```sh
+bun install
+```
 
-Slack is not good. For the beauty of simplicity, I will use a super simple stack (FastAPI + HTMX) and make my own.
+To run:
+```sh
+bun run dev
+```
+
+open http://localhost:3000

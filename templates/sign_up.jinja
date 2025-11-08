@@ -1,0 +1,130 @@
+{% macro SignUp() %}
+  <div class="hero min-h-screen bg-base-200">
+    <div class="hero-content flex-col">
+      <div class="text-center lg:text-left">
+        <h1 class="text-3xl font-bold">Sign Up</h1>
+      </div>
+      <div class="card flex-shrink-0 w-full max-w-sm shadow-lg bg-base-100">
+        <div class="card-body">
+          <form 
+            id="sign-up-form"
+            hx-post="/sign-up"
+            hx-target="#toast-container"
+          >
+            <div class="form-control">
+              <label class="label mb-1 mt-3 text-base">
+                <span class="label-text">Full Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder=""
+                name="full_name"
+                class="input input-bordered focus:outline-none focus:ring-0 text-base"
+              />
+            </div>
+            <div class="form-control">
+              <label class="label mb-1 mt-3 text-base">
+                <span class="label-text">Email</span>
+              </label>
+              <input
+                type="text"
+                placeholder=""
+                name="email"
+                class="input input-bordered focus:outline-none focus:ring-0 text-base"
+              />
+            </div>
+            <div class="form-control">
+              <label class="label mb-1 mt-3 text-base">
+                <span class="label-text">Password</span>
+              </label>
+              <input
+                type="password"
+                placeholder=""
+                name="password"
+                class="input input-bordered focus:outline-none focus:ring-0 text-base"
+              />
+            </div>
+            <div class="form-control">
+              <label class="label mb-1 mt-3 text-base">
+                <span class="label-text">Confirm Password</span>
+              </label>
+              <input
+                type="password"
+                placeholder=""
+                name="confirm_password"
+                class="input input-bordered focus:outline-none focus:ring-0 text-base"
+              />
+            </div>
+            <div class="form-control mt-6">
+              <button class="btn btn-primary w-full text-base">Login</button>
+            </div>
+          </form>
+          <section id="toast-container"></section>
+          <div class="opacity-80 text-base text-center mt-2">
+            Already have an account?
+            <a
+              class="font-bold hover:underline hover: opacity-100"
+              href="/sign-in"
+              >Sign In</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+
+{% macro SignUpCard(title, fields, button_command) %}
+  <div class="hero min-h-screen bg-base-200">
+    <div class="hero-content flex-col">
+      <div class="text-center lg:text-left">
+        <h1 class="text-3xl font-bold">{{ title }}</h1>
+      </div>
+      <div class="card flex-shrink-0 w-full max-w-sm shadow-lg bg-base-100">
+        <div class="card-body">
+          <form 
+            id="sign-up-form"
+            hx-post="/sign-up"
+            hx-target="#toast-container"
+          >
+          {% for field in fields %}
+            <div class="form-control">
+              <label class="label mb-1 mt-3 text-base">
+                <span class="label-text">{{ field.title }}</span>
+              </label>
+              <input
+                type="{{ field.type }}"
+                placeholder=""
+                name="{{ field.name }}"
+                class="input input-bordered focus:outline-none focus:ring-0 text-base"
+              />
+            </div>
+          {% endfor %}
+            <div class="form-control mt-6">
+              <button class="btn btn-primary w-full text-base">{{ button_command }}</button>
+            </div>
+          </form>
+          <section id="toast-container"></section>
+          <div class="opacity-80 text-base text-center mt-2">
+            {% if title == 'Sign Up' %}
+              Already have an account?
+              <a
+                class="font-bold hover:underline hover: opacity-100"
+                href="/sign-in"
+                >Sign In</a
+              >
+            {% else %}
+              No account? You can
+              <a
+                class="font-bold hover:underline hover: opacity-100"
+                href="/sign-up"
+                >Sign Up</a
+              >
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
