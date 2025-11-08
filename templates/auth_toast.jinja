@@ -1,0 +1,15 @@
+{% macro AuthToastSuccess(success_message) %}
+<div class="toast toast-top toast-center">
+  <div class="alert alert-success">
+    <span>{{ success_message }}</span>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro AuthToastError(error_message) %}
+<div class="toast toast-top toast-center">
+  <div class="alert alert-error">
+    <span>{{ error_message }}</span>
+  </div>
+</div>
+{% endmacro %}

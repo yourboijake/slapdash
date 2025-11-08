@@ -1,8 +1,2 @@
-.prettierrc
-.prettierignore
-.vscode/
-.venv/
-__pycache__/
-.mypy_cache/
+# deps
 node_modules/
-database.db
