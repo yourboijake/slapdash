@@ -1,9 +1,0 @@
-{
-  "python-envs.pythonProjects": [],
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "biomejs.biome",
-  "editor.formatOnType": false,
-  "editor.formatOnPaste": false,
-  "postman.settings.dotenv-detection-notification-visibility": false,
-  "python.terminal.activateEnvironment": false
-}
