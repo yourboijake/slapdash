@@ -1,4 +1,0 @@
-{
-  "plugins": ["prettier-plugin-jinja-template"],
-  "parser": "jinja-template"
-}
