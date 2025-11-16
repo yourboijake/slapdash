@@ -1,5 +1,5 @@
 import { db } from "..";
-import { user, session } from "../schema";
+import { user } from "../schema";
 import { z } from "zod";
 import * as bcrypt from "bcrypt";
 import type { FormData } from "../../controllers/auth";
@@ -35,8 +35,8 @@ async function validatePassword(password: string, storedPasswordHash: string) {
 }
 
 type CreateUserResult = {
-  success: boolean;
-  result: HTTPException | typeof user.$inferSelect;
+  newUser: typeof user.$inferSelect | null;
+  error?: HTTPException;
 };
 
 export async function createUser(
@@ -45,8 +45,8 @@ export async function createUser(
   const newUser = NewUserSchema.safeParse(formData);
   if (!newUser.success) {
     return {
-      success: false,
-      result: new HTTPException(400, {
+      newUser: null,
+      error: new HTTPException(400, {
         message: newUser.error.message,
       }),
     };
@@ -54,8 +54,8 @@ export async function createUser(
   const newPassword = await hashPassword(newUser.data.password);
   if (!newPassword) {
     return {
-      success: false,
-      result: new HTTPException(400, {
+      newUser: null,
+      error: new HTTPException(400, {
         message: "Invalid password",
       }),
     };
@@ -64,11 +64,11 @@ export async function createUser(
   const newUserRecord = await db.insert(user).values(newUser.data).returning();
   if (newUserRecord.length === 0) {
     return {
-      success: false,
-      result: new HTTPException(500, {
+      newUser: null,
+      error: new HTTPException(500, {
         message: "Internal server error adding user",
       }),
     };
   }
-  return { success: true, result: newUserRecord[0] };
+  return { newUser: newUserRecord[0] };
 }
