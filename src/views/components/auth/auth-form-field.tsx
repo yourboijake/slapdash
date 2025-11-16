@@ -14,15 +14,15 @@ export const AuthFormField: FC<AuthFormFieldProps> = ({
   placeholder,
 }) => {
   return (
-    <div class="form-control">
-      <label class="label mb-1 mt-3 text-base" for={fieldName}>
-        <span class="label-text">{fieldTitle}</span>
+    <div className="form-control">
+      <label className="label mb-1 mt-3 text-base" for={fieldName}>
+        <span className="label-text">{fieldTitle}</span>
       </label>
       <input
         type={type}
         placeholder={placeholder || ""}
         name={fieldName}
-        class="input input-bordered focus:outline-none focus:ring-0 text-base"
+        className="input input-bordered focus:outline-none focus:ring-0 text-base w-full"
       />
     </div>
   );

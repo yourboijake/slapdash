@@ -16,13 +16,13 @@ export const SignInForm: FC = () => {
     },
   ];
   return (
-    <div class="hero min-h-screen bg-base-200">
-      <div class="hero-content flex-col">
-        <div class="text-center lg:text-left">
-          <h1 class="text-3xl font-bold">Sign In</h1>
+    <div className="hero min-h-screen bg-base-200">
+      <div className="hero-content flex-col">
+        <div className="text-center lg:text-left">
+          <h1 className="text-3xl font-bold">Sign In</h1>
         </div>
-        <div class="card flex-shrink-0 w-full max-w-sm shadow-lg bg-base-100">
-          <div class="card-body">
+        <div className="card flex-shrink-0 w-full max-w-sm shadow-lg bg-base-100">
+          <div className="card-body">
             <form
               id="sign-in-form"
               hx-post="/sign-in"
@@ -38,8 +38,10 @@ export const SignInForm: FC = () => {
                   />
                 );
               })}
-              <div class="form-control mt-6">
-                <button class="btn btn-primary w-full text-base">Login</button>
+              <div className="form-control mt-6">
+                <button className="btn btn-primary w-full text-base">
+                  Login
+                </button>
               </div>
             </form>
             <section id="toast-container"></section>
