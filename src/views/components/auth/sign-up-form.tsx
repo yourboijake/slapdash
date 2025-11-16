@@ -5,7 +5,7 @@ import { AuthPageLink } from "./auth-page-link";
 export const SignUpForm: FC = () => {
   const signUpFields: AuthFormFieldProps[] = [
     {
-      fieldName: "full-name",
+      fieldName: "name",
       fieldTitle: "Full Name",
       type: "text",
     },
@@ -35,7 +35,7 @@ export const SignUpForm: FC = () => {
           <div class="card-body">
             <form
               id="sign-up-form"
-              hx-post="/sign-up"
+              hx-post="/auth/sign-up"
               hx-target="#toast-container"
             >
               {signUpFields.map((field) => {

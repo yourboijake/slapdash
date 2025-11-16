@@ -1,6 +1,6 @@
 import { FC } from "hono/jsx";
 import { chatMessage } from "../../../models/schema";
-import { getChatHistory } from "../../../models/services";
+import { getChatHistory } from "../../../models/services/chat.service";
 
 type ChatMessageType = typeof chatMessage.$inferSelect;
 
@@ -27,7 +27,7 @@ const ChatHistoryRow: FC<{ chat: ChatMessageType }> = (props: {
       <div class="size-10 rounded-box bg-primary"></div>
       <div>
         <div class="text-sm uppercase font-semibold opacity-60">
-          {props.chat.created_at}
+          {props.chat.createdAt}
         </div>
         <div class="list-col-wrap">{props.chat.content}</div>
       </div>
