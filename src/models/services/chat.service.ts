@@ -1,5 +1,5 @@
-import { db } from "./index";
-import * as schema from "./schema";
+import { db } from "../index";
+import * as schema from "../schema";
 import { eq } from "drizzle-orm";
 
 export async function getChatMetadata(id: number) {
