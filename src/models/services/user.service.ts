@@ -1,22 +1,31 @@
 import { db } from "..";
 import { user } from "../schema";
 import { z } from "zod";
-import * as bcrypt from "bcrypt";
-import type { FormData } from "../../controllers/auth";
 import { HTTPException } from "hono/http-exception";
+import { eq } from "drizzle-orm";
 
-const NewUserSchema = z.object({
-  name: z.string(),
-  email: z.string().email("Invalid email address"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(72, "Password cannot be more than 72 characters"),
+const NewUserSchema = z
+  .object({
+    name: z.string(),
+    email: z.string().email("Invalid email address"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(72, "Password cannot be more than 72 characters"),
+    "confirm-password": z.string(),
+  })
+  .refine((data) => data.password === data["confirm-password"], {
+    error: "Passwords must match",
+  });
+
+const SignInSchema = z.object({
+  email: z.string().email("Enter a valid email address"),
+  password: z.string(),
 });
 
-async function hashPassword(password: string) {
+function hashPassword(password: string) {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = Bun.password.hash(password);
     return hashedPassword;
   } catch (error) {
     console.error(error);
@@ -24,9 +33,9 @@ async function hashPassword(password: string) {
   }
 }
 
-async function validatePassword(password: string, storedPasswordHash: string) {
+function validatePassword(password: string, storedPasswordHash: string) {
   try {
-    const valid = await bcrypt.compare(password, storedPasswordHash);
+    const valid = Bun.password.verify(password, storedPasswordHash);
     return valid;
   } catch (error) {
     console.error(error);
@@ -39,10 +48,16 @@ type CreateUserResult = {
   error?: HTTPException;
 };
 
+type SignInResult = {
+  user: typeof user.$inferSelect | null;
+  error?: HTTPException;
+};
+
 export async function createUser(
   formData: FormData,
 ): Promise<CreateUserResult> {
-  const newUser = NewUserSchema.safeParse(formData);
+  const formDataObject = Object.fromEntries(formData.entries());
+  const newUser = NewUserSchema.safeParse(formDataObject);
   if (!newUser.success) {
     return {
       newUser: null,
@@ -71,4 +86,53 @@ export async function createUser(
     };
   }
   return { newUser: newUserRecord[0] };
+}
+
+async function getUserByEmail(userEmail: string) {
+  const userData = await db.query.user.findFirst({
+    where: eq(user?.email, userEmail),
+  });
+  return userData;
+}
+
+export async function getUserById(userId: number) {
+  const userData = await db.query.user.findFirst({
+    where: eq(user?.id, userId),
+  });
+  return userData;
+}
+
+export async function validateSignIn(
+  formData: FormData,
+): Promise<SignInResult> {
+  const formDataObject = Object.fromEntries(formData.entries());
+  const loginCredentials = SignInSchema.safeParse(formDataObject);
+  if (!loginCredentials.success) {
+    return {
+      user: null,
+      error: new HTTPException(401, { message: "Invalid sign in data" }),
+    };
+  }
+  const userData = await getUserByEmail(loginCredentials.data.email);
+  if (!userData) {
+    return {
+      user: null,
+      error: new HTTPException(404, {
+        message: "No user found with that email",
+      }),
+    };
+  }
+  const isValidPassword = await validatePassword(
+    loginCredentials.data.password,
+    userData.password,
+  );
+  if (!isValidPassword) {
+    return {
+      user: null,
+      error: new HTTPException(401, { message: "Invalid password" }),
+    };
+  }
+  return {
+    user: userData,
+  };
 }

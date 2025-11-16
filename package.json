@@ -5,8 +5,6 @@
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
-    "@types/bcrypt": "^6.0.0",
-    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.10.4",

@@ -5,7 +5,7 @@ import { AuthPageLink } from "./auth-page-link";
 export const SignUpForm: FC = () => {
   const signUpFields: AuthFormFieldProps[] = [
     {
-      fieldName: "full-name",
+      fieldName: "name",
       fieldTitle: "Full Name",
       type: "text",
     },
