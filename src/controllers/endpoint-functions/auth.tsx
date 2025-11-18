@@ -1,10 +1,11 @@
 import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { getSignedCookie, setSignedCookie } from "hono/cookie";
+import { setSignedCookie } from "hono/cookie";
 import { createUser, validateSignIn } from "../../models/services/user.service";
 import * as dotenv from "dotenv";
 import {
   createSession,
+  getSessionCookieSecret,
   getSessionsByUserId,
 } from "../../models/services/session.service";
 
@@ -51,8 +52,7 @@ export async function signInPost(c: Context) {
         message: "Failed to create session for newly created user",
       });
     }
-    dotenv.config();
-    const cookieSecret = process.env.COOKIE_SECRET || "set-cookie-secret!";
+    const cookieSecret = getSessionCookieSecret();
     await setSignedCookie(c, "session", newSession.id, cookieSecret, {
       secure: true,
       httpOnly: true,
