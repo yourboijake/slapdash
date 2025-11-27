@@ -23,11 +23,7 @@ export const SignInForm: FC = () => {
         </div>
         <div className="card flex-shrink-0 w-full max-w-sm shadow-lg bg-base-100">
           <div className="card-body">
-            <form
-              id="sign-in-form"
-              hx-post="/auth/sign-in"
-              hx-target="#toast-container"
-            >
+            <form id="sign-in-form" hx-post="/auth/sign-in">
               {signInFormFields.map((field) => {
                 return (
                   <AuthFormField
