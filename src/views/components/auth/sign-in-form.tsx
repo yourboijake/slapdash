@@ -23,11 +23,7 @@ export const SignInForm: FC = () => {
         </div>
         <div className="card flex-shrink-0 w-full max-w-sm shadow-lg bg-base-100">
           <div className="card-body">
-            <form
-              id="sign-in-form"
-              hx-post="/auth/sign-in"
-              hx-target="#toast-container"
-            >
+            <form id="sign-in-form" hx-post="/auth/sign-in">
               {signInFormFields.map((field) => {
                 return (
                   <AuthFormField
@@ -38,13 +34,13 @@ export const SignInForm: FC = () => {
                   />
                 );
               })}
+              <section id="toast-container"></section>
               <div className="form-control mt-6">
                 <button className="btn btn-primary w-full text-base">
                   Login
                 </button>
               </div>
             </form>
-            <section id="toast-container"></section>
             <AuthPageLink
               nonBoldMessage="No account? You can "
               boldLinkMessage="Sign Up"

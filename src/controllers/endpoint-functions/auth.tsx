@@ -6,8 +6,9 @@ import * as dotenv from "dotenv";
 import {
   createSession,
   getSessionCookieSecret,
-  getSessionsByUserId,
+  retrieveOrCreateSession,
 } from "../../models/services/session.service";
+import { AuthFailureToast } from "../../views/components/auth/auth-failure-toast";
 
 export async function signUpPost(c: Context) {
   const formData = await c.req.formData();
@@ -40,25 +41,30 @@ export async function signInPost(c: Context) {
   const formData = await c.req.formData();
   const signInValidation = await validateSignIn(formData);
   if (signInValidation.error || !signInValidation.user) {
-    throw new HTTPException(signInValidation?.error?.status || 404, {
-      message: signInValidation?.error?.message || "Unable to find user",
-    });
+    const errorMessage = "Invalid email or password";
+    c.status(401);
+    c.header("HX-Retarget", "#toast-container");
+    c.header("HX-Swap", "outerHTML");
+    return c.render(<AuthFailureToast errorMessage={errorMessage} />);
   }
-  const existingSessions = await getSessionsByUserId(signInValidation.user.id);
-  if (existingSessions.length === 0) {
-    const newSession = await createSession(signInValidation.user.id);
-    if (!newSession) {
-      throw new HTTPException(500, {
-        message: "Failed to create session for newly created user",
-      });
-    }
-    const cookieSecret = getSessionCookieSecret();
-    await setSignedCookie(c, "session", newSession.id, cookieSecret, {
-      secure: true,
-      httpOnly: true,
-      expires: new Date(newSession.expiresAt),
-      sameSite: "strict",
-    });
+  const session = await retrieveOrCreateSession(signInValidation.user.id);
+  if (!session) {
+    const errorMessage =
+      "Unable to authenticate user due to internal server error";
+    c.status(500);
+    c.header("HX-Retarget", "#toast-container");
+    c.header("HX-Swap", "outerHTML");
+    return c.render(<AuthFailureToast errorMessage={errorMessage} />);
   }
-  return c.redirect("/chat");
+  const cookieSecret = getSessionCookieSecret();
+  await setSignedCookie(c, "session", session.id, cookieSecret, {
+    secure: true,
+    httpOnly: true,
+    expires: new Date(session.expiresAt),
+    sameSite: "strict",
+  });
+  c.status(200);
+  c.header("HX-Redirect", "/chat");
+  //return c.redirect("/chat");
+  return c.body(null);
 }

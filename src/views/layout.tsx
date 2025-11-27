@@ -21,6 +21,11 @@ export const Layout: FC = (props) => {
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/htmx-ext-ws@2.0.2"></script>
+        <meta
+          name="htmx-config"
+          content='{"responseHandling": [{"code":".*", "swap": true}]}'
+        />{" "}
+        {/* all HTMX responses are swapped, https://htmx.org/docs/#response-handling */}
       </head>
       <body
         data-theme="dark"
