@@ -34,13 +34,13 @@ export const SignInForm: FC = () => {
                   />
                 );
               })}
+              <section id="toast-container"></section>
               <div className="form-control mt-6">
                 <button className="btn btn-primary w-full text-base">
                   Login
                 </button>
               </div>
             </form>
-            <section id="toast-container"></section>
             <AuthPageLink
               nonBoldMessage="No account? You can "
               boldLinkMessage="Sign Up"

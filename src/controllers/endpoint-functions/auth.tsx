@@ -42,13 +42,19 @@ export async function signInPost(c: Context) {
   const signInValidation = await validateSignIn(formData);
   if (signInValidation.error || !signInValidation.user) {
     const errorMessage = "Invalid email or password";
+    c.status(401);
+    c.header("HX-Retarget", "#toast-container");
+    c.header("HX-Swap", "outerHTML");
     return c.render(<AuthFailureToast errorMessage={errorMessage} />);
   }
   const session = await retrieveOrCreateSession(signInValidation.user.id);
   if (!session) {
-    throw new HTTPException(500, {
-      message: "Failed to create session for newly created user",
-    });
+    const errorMessage =
+      "Unable to authenticate user due to internal server error";
+    c.status(500);
+    c.header("HX-Retarget", "#toast-container");
+    c.header("HX-Swap", "outerHTML");
+    return c.render(<AuthFailureToast errorMessage={errorMessage} />);
   }
   const cookieSecret = getSessionCookieSecret();
   await setSignedCookie(c, "session", session.id, cookieSecret, {
@@ -57,5 +63,8 @@ export async function signInPost(c: Context) {
     expires: new Date(session.expiresAt),
     sameSite: "strict",
   });
-  return c.redirect("/chat");
+  c.status(200);
+  c.header("HX-Redirect", "/chat");
+  //return c.redirect("/chat");
+  return c.body(null);
 }
