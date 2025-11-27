@@ -8,23 +8,37 @@ import {
   getSessionCookieSecret,
   retrieveOrCreateSession,
 } from "../../models/services/session.service";
-import { AuthFailureToast } from "../../views/components/auth/auth-failure-toast";
+import { AuthToast } from "../../views/components/auth/auth-toast";
 
 export async function signUpPost(c: Context) {
   const formData = await c.req.formData();
   const createUserResult = await createUser(formData);
   if (createUserResult.error) {
-    throw new HTTPException(createUserResult.error.status, {
-      message: createUserResult.error.message,
-    });
+    c.status(createUserResult.error.status);
+    c.header("HX-Retarget", "#toast-container");
+    c.header("HX-Swap", "outerHTML");
+    return c.render(
+      <AuthToast message={createUserResult.error.message} type="failure" />,
+    );
   } else if (!createUserResult.newUser) {
-    throw new HTTPException(500, { message: "Failed to create new user" });
+    c.status(500);
+    c.header("HX-Retarget", "#toast-container");
+    c.header("HX-Swap", "outerHTML");
+    return c.render(
+      <AuthToast message={"Failed to create new user"} type="failure" />,
+    );
   }
   const newSession = await createSession(createUserResult.newUser.id);
   if (!newSession) {
-    throw new HTTPException(500, {
-      message: "Failed to create session for newly created user",
-    });
+    c.status(500);
+    c.header("HX-Retarget", "#toast-container");
+    c.header("HX-Swap", "outerHTML");
+    return c.render(
+      <AuthToast
+        message={"Failed to create browser session for new user"}
+        type="failure"
+      />,
+    );
   }
   dotenv.config();
   const cookieSecret = process.env.COOKIE_SECRET || "set-cookie-secret!";
@@ -34,7 +48,17 @@ export async function signUpPost(c: Context) {
     expires: new Date(newSession.expiresAt),
     sameSite: "strict",
   });
-  return c.redirect("/chat");
+  c.status(200);
+  c.header("HX-Retarget", "#toast-container");
+  c.header("HX-Swap", "outerHTML");
+  return c.render(
+    <AuthToast
+      message={
+        "Successfully created new user. Click the link below to sign in."
+      }
+      type="success"
+    />,
+  );
 }
 
 export async function signInPost(c: Context) {
@@ -45,7 +69,7 @@ export async function signInPost(c: Context) {
     c.status(401);
     c.header("HX-Retarget", "#toast-container");
     c.header("HX-Swap", "outerHTML");
-    return c.render(<AuthFailureToast errorMessage={errorMessage} />);
+    return c.render(<AuthToast message={errorMessage} type="failure" />);
   }
   const session = await retrieveOrCreateSession(signInValidation.user.id);
   if (!session) {
@@ -54,7 +78,7 @@ export async function signInPost(c: Context) {
     c.status(500);
     c.header("HX-Retarget", "#toast-container");
     c.header("HX-Swap", "outerHTML");
-    return c.render(<AuthFailureToast errorMessage={errorMessage} />);
+    return c.render(<AuthToast message={errorMessage} type="failure" />);
   }
   const cookieSecret = getSessionCookieSecret();
   await setSignedCookie(c, "session", session.id, cookieSecret, {
@@ -65,6 +89,5 @@ export async function signInPost(c: Context) {
   });
   c.status(200);
   c.header("HX-Redirect", "/chat");
-  //return c.redirect("/chat");
   return c.body(null);
 }
