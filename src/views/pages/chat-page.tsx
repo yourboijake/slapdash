@@ -11,7 +11,7 @@ type ChatPageProps = {
 export const ChatPage: FC<ChatPageProps> = ({ chatSessionId }) => {
   return (
     <Layout>
-      <div hx-ext="ws" ws-connect="/chat">
+      <div hx-ext="ws" ws-connect="/chat-ws">
         <div class="flex flex-col items-center justify-center h-screen">
           <div class="h-10 w-2/3 flex text-white">
             <ChatHeader title="test chat title" />
