@@ -1,5 +1,5 @@
-import { FC } from "hono/jsx";
-import { chatMessage } from "../../../models/schema";
+import type { FC } from "hono/jsx";
+import type { chatMessage } from "../../../models/schema";
 import { getChatHistory } from "../../../models/services/chat.service";
 
 type ChatMessageType = typeof chatMessage.$inferSelect;
