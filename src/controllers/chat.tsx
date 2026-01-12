@@ -28,6 +28,14 @@ app.get("/chat/:id", async (c) => {
 });
 app.get(
   "/chat-ws",
+  (c, next) => {
+    const isValidSession = validateSession(c);
+    if (!isValidSession) {
+      console.log("hit ws session middleware, no valid session");
+      return c.text("unauthorized", 401);
+    }
+    return next();
+  },
   upgradeWebSocket(async (c) => {
     return {
       onOpen(evt, ws) {
