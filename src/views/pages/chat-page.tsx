@@ -5,17 +5,18 @@ import { ChatSidebar } from "../components/chat/chat-sidebar";
 
 type ChatPageProps = {
   chatSessionId: number;
+  userId: number;
 };
 
-export const ChatPage: FC<ChatPageProps> = ({ chatSessionId }) => {
+export const ChatPage: FC<ChatPageProps> = ({ chatSessionId, userId }) => {
   return (
     <Layout>
       <div class="grid grid-cols-5 gap-4">
         <div class="col-span-1">
-          <ChatSidebar />
+          <ChatSidebar userId={userId} />
         </div>
         <div class="col-span-4">
-          <ChatSection chatSessionId={chatSessionId} />
+          <ChatSection chatSessionId={chatSessionId} userId={userId} />
         </div>
       </div>
     </Layout>

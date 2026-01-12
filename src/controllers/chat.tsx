@@ -6,25 +6,32 @@ import { upgradeWebSocket, websocket } from "hono/bun";
 import { createMiddleware } from "hono/factory";
 import type { ServerWebSocket } from "bun";
 
-const app = new Hono();
+const app = new Hono<{ Variables: Variables }>();
+
+type Variables = {
+  userId: number;
+};
 
 const validSessionMiddleware = createMiddleware(async (c, next) => {
-  const isValidSession = await validateSession(c);
-  if (!isValidSession) {
+  const sessionValidationResult = await validateSession(c);
+  if (!sessionValidationResult.isValid) {
     console.log("hit session middleware, no valid session");
     return c.redirect("/auth/sign-in");
   }
+  c.set("userId", sessionValidationResult.sessionData.userId); // You need to replace "someUserId" with the actual user ID from the session or context
   await next();
 });
 
 app.use(jsxRenderer());
 app.use("/chat/*", validSessionMiddleware);
 app.get("/chat", async (c) => {
-  return c.render(<ChatPage chatSessionId={1} />);
+  const userId = c.get("userId");
+  return c.render(<ChatPage chatSessionId={1} userId={userId} />);
 });
 app.get("/chat/:id", async (c) => {
   const chatId = Number(c.req.param("id"));
-  return c.render(<ChatPage chatSessionId={chatId} />);
+  const userId = c.get("userId");
+  return c.render(<ChatPage chatSessionId={chatId} userId={userId} />);
 });
 app.get(
   "/chat-ws",
