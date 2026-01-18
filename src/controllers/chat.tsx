@@ -62,7 +62,6 @@ app.get(
           console.error("Invalid WS chat message received: ", evt.data);
           return;
         }
-        console.log(wsChatMessage);
         const newChat: ChatMessageInsert = {
           chatSessionId: wsChatMessage.chatSessionId,
           senderId: userId,

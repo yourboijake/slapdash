@@ -7,7 +7,13 @@ type ChatBoxProps = {
 export const ChatBox: FC<ChatBoxProps> = ({ chatSessionId }) => {
   return (
     <div id="chat-box" class="w-full">
-      <form id="form" ws-send hx-trigger="submit from:body">
+      <form
+        id="form"
+        ws-send
+        hx-trigger="submit from:body"
+        hx-target="#chat-history"
+        hx-swap="beforeend scroll:#chat-history:bottom"
+      >
         <input type="hidden" name="chat_session_id" value={chatSessionId} />
         <div class="relative w-full">
           <textarea
