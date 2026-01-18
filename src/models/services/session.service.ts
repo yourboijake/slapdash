@@ -64,17 +64,35 @@ export async function deleteSession(
   }
 }
 
-export async function validateSession(c: Context): Promise<boolean> {
+export type SessionValidationResult =
+  | {
+      isValid: true;
+      sessionData: typeof session.$inferSelect;
+    }
+  | {
+      isValid: false;
+    };
+
+export async function validateSession(
+  c: Context,
+): Promise<SessionValidationResult> {
   const cookieSecret = getSessionCookieSecret();
   const sessionCookie = await getSignedCookie(c, cookieSecret);
   if (!sessionCookie.session) {
-    return false;
+    return {
+      isValid: false,
+    };
   }
   const sessionData = await getSessionById(sessionCookie.session);
   if (!sessionData) {
-    return false;
+    return {
+      isValid: false,
+    };
   }
-  return true;
+  return {
+    isValid: true,
+    sessionData,
+  };
 }
 
 export async function getSessionById(sessionId: string) {

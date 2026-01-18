@@ -28,7 +28,9 @@ export const chatSession = sqliteTable("chat_session", {
 
 export const chatSessionMember = sqliteTable("chat_session_member", {
   id: int().primaryKey({ autoIncrement: true }),
-  userId: int("user_id").references(() => user.id),
+  userId: int("user_id")
+    .references(() => user.id)
+    .notNull(),
   chatSessionId: int("chat_session_id").references(() => chatSession.id),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });
@@ -37,7 +39,9 @@ export const session = sqliteTable(
   "session",
   {
     id: text().primaryKey().default(sql`(lower(hex(randomblob(32))))`),
-    userId: int("user_id").references(() => user.id),
+    userId: int("user_id")
+      .references(() => user.id)
+      .notNull(),
     createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
     expiresAt: text("expires_at")
       .notNull()

@@ -1,8 +1,6 @@
-import { FC } from "hono/jsx";
-import { chatMessage } from "../../../models/schema";
+import type { FC } from "hono/jsx";
 import { getChatHistory } from "../../../models/services/chat.service";
-
-type ChatMessageType = typeof chatMessage.$inferSelect;
+import type { ChatMessageInsert } from "../../../models/types";
 
 type ChatHistoryProps = {
   chatSessionId: number;
@@ -19,8 +17,8 @@ export const ChatHistory: FC<ChatHistoryProps> = async ({ chatSessionId }) => {
   );
 };
 
-const ChatHistoryRow: FC<{ chat: ChatMessageType }> = (props: {
-  chat: ChatMessageType;
+const ChatHistoryRow: FC<{ chat: ChatMessageInsert }> = (props: {
+  chat: ChatMessageInsert;
 }) => {
   return (
     <li class="list-row hover:bg-info-content">
