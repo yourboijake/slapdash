@@ -137,7 +137,7 @@ export async function validateSignIn(
   };
 }
 
-export async function getAllUsers() {
+export async function getAllUsers(): Promise<(typeof user.$inferSelect)[]> {
   const users = await db.query.user.findMany();
   return users;
 }

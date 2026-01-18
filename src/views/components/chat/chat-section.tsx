@@ -16,7 +16,7 @@ export const ChatSection: FC<ChatSectionProps> = ({
     <div hx-ext="ws" ws-connect="/chat-ws">
       <ChatHeader title="test chat title" />
       <ChatHistory chatSessionId={chatSessionId} />
-      <ChatBox />
+      <ChatBox chatSessionId={chatSessionId} />
     </div>
   );
 };

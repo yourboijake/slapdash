@@ -1,8 +1,9 @@
 import type { WSMessageReceive } from "hono/ws";
-import type { chatMessage } from "./schema";
+import type { chatMessage, chatSession } from "./schema";
 import { z } from "zod";
 
 export type ChatMessageInsert = typeof chatMessage.$inferInsert;
+export type ChatSession = typeof chatSession.$inferSelect;
 
 export type WSChatMessage = {
   chatSessionId: number;
