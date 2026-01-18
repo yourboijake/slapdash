@@ -29,7 +29,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = async ({ userId }) => {
 export const ChatSidebarUser: FC<ChatSidebarUserProps> = ({ user }) => {
   const initials = user.name
     .split(" ")
-    .map((n) => n[0])
+    .map((n) => (n.length > 0 ? n[0] : ""))
     .join("")
     .toUpperCase();
   return (

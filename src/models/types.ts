@@ -21,7 +21,7 @@ export async function convertToWSChatMessage(
   input: WSMessageReceive,
 ): Promise<WSChatMessage | null> {
   try {
-    let parsed: any;
+    let parsed: unknown;
     if (typeof input === "string") {
       parsed = JSON.parse(input);
     } else {
