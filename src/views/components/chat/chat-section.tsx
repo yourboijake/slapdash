@@ -13,10 +13,27 @@ export const ChatSection: FC<ChatSectionProps> = ({
   userId,
 }) => {
   return (
-    <div hx-ext="ws" ws-connect="/chat-ws">
-      <ChatHeader title="test chat title" />
-      <ChatHistory chatSessionId={chatSessionId} />
-      <ChatBox chatSessionId={chatSessionId} />
+    // h-dvh ensures it fits perfectly even on mobile/resized windows
+    // overflow-hidden on the parent is the "safety belt" to stop page scroll
+    <div
+      hx-ext="ws"
+      ws-connect="/chat-ws"
+      className="h-dvh w-full overflow-hidden flex flex-col"
+    >
+      {/* Header: Fixed Height */}
+      <header className="h-[50px] flex-none">
+        <ChatHeader title={`Chat Session ${chatSessionId}`} />
+      </header>
+
+      {/* History: Takes all remaining space and scrolls internally */}
+      <main className="flex-grow overflow-y-auto">
+        <ChatHistory chatSessionId={chatSessionId} />
+      </main>
+
+      {/* Input: Fixed Height */}
+      <footer className="h-[100px] flex-none mb-4">
+        <ChatBox chatSessionId={chatSessionId} />
+      </footer>
     </div>
   );
 };

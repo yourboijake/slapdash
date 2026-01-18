@@ -11,7 +11,7 @@ type ChatPageProps = {
 export const ChatPage: FC<ChatPageProps> = ({ chatSessionId, userId }) => {
   return (
     <Layout>
-      <div class="grid grid-cols-5 gap-4">
+      <div class="grid grid-cols-5 gap-4 h-full">
         <div class="col-span-1">
           <ChatSidebar userId={userId} />
         </div>
